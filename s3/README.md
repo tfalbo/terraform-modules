@@ -23,22 +23,86 @@ This module creates an S3 bucket with best practices for security, scalability, 
 
 ## Usage
 
-An example of how to use this module can be found in examples/complete/main.tf.
+This setup allows you to use Terragrunt to manage the infrastructure created by your Terraform module, providing additional features like locking, remote state management, and more.
 
-```
-provider "aws" {
-  region = "us-west-2"
-}
-
+```hcl
 module "s3_bucket" {
-  source        = "../../"
-  bucket_name   = "example-bucket"
-  logging_bucket = "example-logging-bucket"
+  source        = "path_to_module"
+  bucket_name   = "my-bucket"
+  logging_bucket = "my-logging-bucket"
   tags          = {
     Environment = "dev"
-    Project     = "example-project"
+    Project     = "my-project"
   }
 }
+```
+
+## Using Terragrunt
+
+To use Terragrunt to manage the infrastructure created by this module, follow these steps:
+
+1. **Install Terragrunt**: Ensure you have Terragrunt installed on your machine. You can download and install it from [terragrunt website](https://terragrunt.gruntwork.io/docs/getting-started/install/).
+
+2. **Create a Terragrunt Configuration File**: Create a `terragrunt.hcl` file in a directory where you want to manage the infrastructure.
+
+3. **Configure Terragrunt**: In the `terragrunt.hcl` file, specify the Terraform module source and any necessary inputs.
+
+### Example `terragrunt.hcl` File (you can use the one provided by the module)
+
+```hcl
+terraform {
+  source = "path_to_module"
+}
+
+inputs = {
+  bucket_name    = "my-bucket"
+  versioning     = true
+  logging_bucket = "my-logging-bucket"
+  logging_prefix = "logs/"
+  tags = {
+    Environment = "dev"
+    Project     = "my-project"
+  }
+}
+```
+
+### Steps to Use Terragrunt
+
+1. **Navigate to the Directory**: Change your directory to where the `terragrunt.hcl` file is located.
+    ```sh
+    cd path/to/terragrunt/directory
+    ```
+
+2. **Run Terragrunt Commands**: Use Terragrunt to manage the infrastructure.
+
+    - **Initialize**: Initialize the Terraform configuration.
+        ```sh
+        terragrunt init
+        ```
+
+    - **Apply**: Apply the Terraform configuration to create or update the infrastructure.
+        ```sh
+        terragrunt apply
+        ```
+
+    - **Destroy**: Destroy the infrastructure managed by Terraform.
+        ```sh
+        terragrunt destroy
+        ```
+
+### Example Commands
+```sh
+# Navigate to the directory with terragrunt.hcl
+cd path/to/terragrunt/directory
+
+# Initialize the Terraform configuration
+terragrunt init
+
+# Apply the Terraform configuration
+terragrunt apply
+
+# Destroy the infrastructure
+terragrunt destroy
 ```
 
 ## Testing
